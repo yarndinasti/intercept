@@ -5,12 +5,12 @@
     <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
-    <ROW Property="ARPPRODUCTICON" Value="GoogleNotoEmojiObjects62829keyboard.exe" Type="8"/>
+    <ROW Property="ARPPRODUCTICON" Value="GoogleNotoEmojiObjects62829keyboard_1.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="DSI"/>
     <ROW Property="ProductCode" Value="1033:{87F175A0-7829-4F82-ABB1-86BCB19AD9AC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.0.3.0" Type="32" TargetFile="intercept.exe"/>
+    <ROW Property="ProductVersion" Value="0.0.4.0" Type="32" TargetFile="intercept.exe"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="AnyCPU_Release:Windows 9x/ME" ValueLocId="-"/>
@@ -166,7 +166,7 @@
     <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="GoogleNotoEmojiObjects62829keyboard.exe" SourcePath="..\..\..\..\Downloads\Google-Noto-Emoji-Objects-62829-keyboard.ico" Index="0"/>
+    <ROW Name="GoogleNotoEmojiObjects62829keyboard_1.exe" SourcePath="..\intercept\Google-Noto-Emoji-Objects-62829-keyboard.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
