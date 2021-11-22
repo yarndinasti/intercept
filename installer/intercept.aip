@@ -5,6 +5,7 @@
     <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPPRODUCTICON" Value="GoogleNotoEmojiObjects62829keyboard.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="DSI"/>
     <ROW Property="ProductCode" Value="1033:{87F175A0-7829-4F82-ABB1-86BCB19AD9AC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
@@ -163,6 +164,9 @@
     <ROW Feature_="MainFeature" Component_="System.Xml.Linq.dll"/>
     <ROW Feature_="MainFeature" Component_="intercept_cmd.exe"/>
     <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="GoogleNotoEmojiObjects62829keyboard.exe" SourcePath="..\..\..\..\Downloads\Google-Noto-Emoji-Objects-62829-keyboard.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>

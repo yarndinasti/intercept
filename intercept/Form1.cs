@@ -61,7 +61,18 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
         private void FileChanged(object sender, FileSystemEventArgs e)
         {
-            if (active) Process.Start(dataMacro + "keyboard.ahk");
+            Process[] GetPArry = Process.GetProcesses();
+            foreach (Process testProcess in GetPArry)
+            {
+                string ProcessName = testProcess.ProcessName;
+
+                if (ProcessName.CompareTo("autohotkey") == 0)
+                    testProcess.Kill();
+            }
+
+            if (active) { 
+                Process.Start(dataMacro + "keyboard.ahk"); 
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -128,7 +139,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 if (ProcessName.CompareTo("intercept_cmd") == 0)
                     testProcess.Kill();
 
-                if (ProcessName.CompareTo("AutoHotKey") == 0)
+                if (ProcessName.CompareTo("autohotkey") == 0)
                     testProcess.Kill();
             }
         }
