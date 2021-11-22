@@ -47,7 +47,7 @@
             // 
             this.runBtn.Location = new System.Drawing.Point(12, 104);
             this.runBtn.Name = "runBtn";
-            this.runBtn.Size = new System.Drawing.Size(121, 23);
+            this.runBtn.Size = new System.Drawing.Size(203, 23);
             this.runBtn.TabIndex = 0;
             this.runBtn.Text = "Run";
             this.runBtn.UseVisualStyleBackColor = true;
@@ -57,7 +57,7 @@
             // 
             this.button2.Location = new System.Drawing.Point(12, 12);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(121, 23);
+            this.button2.Size = new System.Drawing.Size(104, 23);
             this.button2.TabIndex = 1;
             this.button2.Text = "Keyboard Settings";
             this.button2.UseVisualStyleBackColor = true;
@@ -65,9 +65,9 @@
             // 
             // ahkEditBtn
             // 
-            this.ahkEditBtn.Location = new System.Drawing.Point(12, 75);
+            this.ahkEditBtn.Location = new System.Drawing.Point(125, 12);
             this.ahkEditBtn.Name = "ahkEditBtn";
-            this.ahkEditBtn.Size = new System.Drawing.Size(121, 23);
+            this.ahkEditBtn.Size = new System.Drawing.Size(90, 23);
             this.ahkEditBtn.TabIndex = 2;
             this.ahkEditBtn.Text = "Setting Macro";
             this.ahkEditBtn.UseVisualStyleBackColor = true;
@@ -116,7 +116,7 @@
             // checkStartup
             // 
             this.checkStartup.AutoSize = true;
-            this.checkStartup.Location = new System.Drawing.Point(12, 41);
+            this.checkStartup.Location = new System.Drawing.Point(12, 81);
             this.checkStartup.Name = "checkStartup";
             this.checkStartup.Size = new System.Drawing.Size(121, 17);
             this.checkStartup.TabIndex = 3;
@@ -128,12 +128,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(145, 142);
+            this.ClientSize = new System.Drawing.Size(227, 142);
             this.Controls.Add(this.checkStartup);
             this.Controls.Add(this.ahkEditBtn);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.runBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "Form1";

@@ -12,14 +12,56 @@ namespace intercept
     {
         bool active = false;
         StreamReader iniFile, txtFile;
+        private FileSystemWatcher _watcher;
 
         string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                 @"\intercept\";
         string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) + 
                 ".lnk";
+        string AHK = @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
+
+#SingleInstance force
+#if (getKeyState(""F23"", ""P""))
+  F23::return
+; Code here!!!
+
+; End Code
+#if
+  ;Done with F23";
+
         public Form1()
         {
             InitializeComponent();
+
+            _watcher = new FileSystemWatcher();
+            _watcher.SynchronizingObject = this;
+            _watcher.Path = dataMacro;
+            _watcher.EnableRaisingEvents = true;
+            _watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+            _watcher.Filter = "keyboard.ahk";
+
+            _watcher.Changed += new FileSystemEventHandler(FileChanged);
+            _watcher.Deleted += new FileSystemEventHandler(FileDeleted);
+            _watcher.Renamed += new RenamedEventHandler(FileRenamed);
+        }
+
+        private void FileRenamed(object sender, RenamedEventArgs e)
+        {
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);
+        }
+
+        private void FileDeleted(object sender, FileSystemEventArgs e)
+        {
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);
+        }
+
+        private void FileChanged(object sender, FileSystemEventArgs e)
+        {
+            if (active) Process.Start(dataMacro + "keyboard.ahk");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -110,20 +152,6 @@ namespace intercept
             new Wizard().ShowDialog();
             if (!System.IO.File.Exists(dataMacro + "keyboardHID.txt"))
                 new KeySetFrm().ShowDialog();
-
-            string AHK = @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
-
-#SingleInstance force
-#if (getKeyState(""F23"", ""P""))
-  F23::return
-; Code here!!!
-
-; End Code
-#if
-  ;Done with F23";
 
             if (!System.IO.File.Exists(dataMacro + "keyboard.ahk"))
                 System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);

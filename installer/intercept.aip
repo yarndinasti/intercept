@@ -9,7 +9,7 @@
     <ROW Property="ProductCode" Value="1033:{87F175A0-7829-4F82-ABB1-86BCB19AD9AC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.0.1.0" Type="32" TargetFile="intercept.exe"/>
+    <ROW Property="ProductVersion" Value="0.0.3.0" Type="32" TargetFile="intercept.exe"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="AnyCPU_Release:Windows 9x/ME" ValueLocId="-"/>
