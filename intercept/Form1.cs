@@ -137,16 +137,26 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 // Go
                 process.Start();
 
-                while (!process.StandardOutput.EndOfStream)
+                Thread.Sleep(1100);
+                bool isRunning = false;
+
+                Process[] GetPArry = Process.GetProcesses();
+                foreach (Process testProcess in GetPArry)
                 {
-                    string line = process.StandardOutput.ReadLine();
-                    if (line == "Oblitum Interception driver not loaded!")
-                        throw new Exception("Interception not installed correctly,\ntry to reboot and install again");
+                    string ProcessName = testProcess.ProcessName;
+
+                    ProcessName = ProcessName.ToLower();
+                    if (ProcessName.CompareTo("intercept_cmd") == 0)
+                        isRunning = true;
                 }
+
+                if (!isRunning)
+                    throw new Exception("Interception not installed correctly,\ntry to reboot and install again");
             }
-            catch (Exception error)
+            catch (Exception err)
             {
-                MessageBox.Show(error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(err.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 runBtn.Text = "Run";
                 runToolStripMenuItem.Text = "&Run";
                 active = false;
