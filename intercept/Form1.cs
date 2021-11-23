@@ -121,19 +121,39 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
             iniFile = new StreamReader(dataMacro + "keyremap.ini");
             txtFile = new StreamReader(dataMacro + "keyboardHID.txt");
 
-            Process process = new Process();
+            try
+            {
+                Process process = new Process();
 
-            // Stop the process from opening a new window
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
+                // Stop the process from opening a new window
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
 
-            // Setup executable and parameters
-            process.StartInfo.FileName = @"intercept_cmd.exe";
-            process.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
+                // Setup executable and parameters
+                process.StartInfo.FileName = @"intercept_cmd.exe";
+                process.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
 
-            // Go
-            process.Start();
+                // Go
+                process.Start();
+
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    string line = process.StandardOutput.ReadLine();
+                    if (line == "Oblitum Interception driver not loaded!")
+                        throw new Exception("Interception not installed correctly,\ntry to reboot and install again");
+                }
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                runBtn.Text = "Run";
+                runToolStripMenuItem.Text = "&Run";
+                active = false;
+
+                return;
+            }
+
             Process.Start(dataMacro + "keyboard.ahk");
         }
 
@@ -201,6 +221,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
                 if (arg == "/play")
                 {
+                    active = true;
                     runBtn.Text = "Stop";
                     runToolStripMenuItem.Text = "&Stop";
 
@@ -303,7 +324,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                     {
                         string line = process.StandardOutput.ReadLine();
 
-                        if (line == "Interception uninstalled. You must reboot for it to take effect.")
+                        if (line == "Interception uninstalled. You must reboot for this to take effect.")
                             MessageBox.Show(line, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else if (line == "" || line == "Copyright (C) 2008-2018 Francisco Lopes da Silva" ||
                             line == "Interception command line installation tool")
