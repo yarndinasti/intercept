@@ -18,19 +18,8 @@ namespace interceptGUI
                 @"\intercept\";
         string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) +
                 ".lnk";
-        string AHK = @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
-#SingleInstance force
-#if (getKeyState(""F23"", ""P""))
-  F23::return
-; Code here!!!
-
-; End Code
-#if
-  ;Done with F23";
+        Process AHK, interceptCMD;
 
         public Form1()
         {
@@ -61,28 +50,20 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
         private void FileRenamed(object sender, RenamedEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
         }
 
         private void FileDeleted(object sender, FileSystemEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
         }
 
         private void FileChanged(object sender, FileSystemEventArgs e)
         {
-            Process[] GetPArry = Process.GetProcesses();
-            foreach (Process testProcess in GetPArry)
-            {
-                string ProcessName = testProcess.ProcessName;
-
-                if (ProcessName.CompareTo("autohotkey") == 0)
-                    testProcess.Kill();
-            }
-
             if (active)
             {
-                Process.Start(dataMacro + "keyboard.ahk");
+                AHK.Kill();
+                AHK.Start();
             }
         }
 
@@ -123,32 +104,21 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
             try
             {
-                Process process = new Process();
+                interceptCMD = new Process();
 
                 // Stop the process from opening a new window
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
+                interceptCMD.StartInfo.RedirectStandardOutput = true;
+                interceptCMD.StartInfo.UseShellExecute = false;
+                interceptCMD.StartInfo.CreateNoWindow = true;
 
                 // Setup executable and parameters
-                process.StartInfo.FileName = @"intercept_cmd.exe";
-                process.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
+                interceptCMD.StartInfo.FileName = @"intercept_cmd.exe";
+                interceptCMD.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
 
                 // Go
-                process.Start();
+                interceptCMD.Start();
 
-                Thread.Sleep(1100);
-                bool isRunning = false;
-
-                Process[] GetPArry = Process.GetProcesses();
-                foreach (Process testProcess in GetPArry)
-                {
-                    string ProcessName = testProcess.ProcessName;
-
-                    ProcessName = ProcessName.ToLower();
-                    if (ProcessName.CompareTo("intercept_cmd") == 0)
-                        isRunning = true;
-                }
+                bool isRunning = !interceptCMD.WaitForExit(1500);
 
                 if (!isRunning)
                     throw new Exception("Interception not installed correctly,\ntry to reboot and install again");
@@ -164,23 +134,17 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 return;
             }
 
-            Process.Start(dataMacro + "keyboard.ahk");
+            //Process.Start(dataMacro + "keyboard.ahk");
+
+            AHK = new Process();
+            AHK.StartInfo.FileName = dataMacro + "keyboard.ahk";
+            AHK.Start();
         }
 
         private void stopMacro()
         {
-            Process[] GetPArry = Process.GetProcesses();
-            foreach (Process testProcess in GetPArry)
-            {
-                string ProcessName = testProcess.ProcessName;
-
-                ProcessName = ProcessName.ToLower();
-                if (ProcessName.CompareTo("intercept_cmd") == 0)
-                    testProcess.Kill();
-
-                if (ProcessName.CompareTo("autohotkey") == 0)
-                    testProcess.Kill();
-            }
+            interceptCMD.Kill();
+            AHK.Kill();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -215,7 +179,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 new KeySetFrm().ShowDialog();
 
             if (!System.IO.File.Exists(dataMacro + "keyboard.ahk"))
-                System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", AHK);
+                System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
 
             checkStartup.Checked = System.IO.File.Exists(ShortcutPath);
 

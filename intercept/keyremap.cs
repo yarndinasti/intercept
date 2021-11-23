@@ -8,6 +8,23 @@ namespace interceptGUI
 {
     internal class keyremap
     {
+
+        public static string AHK()
+        {
+            return @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
+
+#SingleInstance force
+#if (getKeyState(""F23"", ""P""))
+  F23::return
+; Code here!!!
+
+; End Code
+#if
+  ;Done with F23";
+        }
         public static string KeyMap()
         {
             return @";TARAN NOTE:

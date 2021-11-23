@@ -16,14 +16,19 @@ namespace interceptGUI
 
         private void Wizard_Load(object sender, EventArgs e)
         {
-            string Interception = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\" + @"\drivers\keyboard.sys");
+            string Interception = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\" + 
+                @"\drivers\keyboard.sys");
+            RegistryKey HKLM64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            bool is64 = Environment.Is64BitOperatingSystem;
 
             string uninstall_locate = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             string uninstall_user = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
-            bool AutoHotKey = KeyExists(Registry.LocalMachine.OpenSubKey(uninstall_locate), "AutoHotkey");
-            bool VscodeUser = KeyExists(Registry.CurrentUser.OpenSubKey(uninstall_user), "{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1");
+            bool AutoHotKey = KeyExists((is64) ? HKLM64.OpenSubKey(uninstall_locate) : 
+                Registry.LocalMachine.OpenSubKey(uninstall_locate), "AutoHotkey");
+            bool VscodeUser = KeyExists(Registry.CurrentUser.OpenSubKey(uninstall_user), 
+                "{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1");
 
-            AHKinstalled.Checked = !AutoHotKey;
+            AHKinstalled.Checked = AutoHotKey;
             InterceptionInstalled.Checked = File.Exists(Interception);
             IntInstall.Enabled = !File.Exists(Interception);
             VSCodeInstalled.Checked = VscodeUser;
