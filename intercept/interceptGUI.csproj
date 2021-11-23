@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9B89603D-916B-4CF7-9202-B9AF313415A5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>intercept</RootNamespace>
-    <AssemblyName>intercept</AssemblyName>
+    <RootNamespace>interceptGUI</RootNamespace>
+    <AssemblyName>interceptGUI</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -84,6 +84,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Wizard.resx">
       <DependentUpon>Wizard.cs</DependentUpon>

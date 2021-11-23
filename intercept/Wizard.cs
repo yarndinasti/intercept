@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace intercept
+namespace interceptGUI
 {
     public partial class Wizard : Form
     {
@@ -44,26 +44,46 @@ namespace intercept
 
         private void IntInstall_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-
-            // Stop the process from opening a new window
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-
-            // Setup executable and parameters
-            process.StartInfo.FileName = @"install-interception.exe";
-            process.StartInfo.Arguments = "/install";
-
-            if (System.Environment.OSVersion.Version.Major >= 6)
+            try
             {
-                process.StartInfo.Verb = "runas";
-            }
+                Process process = new Process();
 
-            // Go
-            process.Start();
-            IntInstall.Enabled = false;
-            RestartLbl.Visible = true;
+                // Stop the process from opening a new window
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                // Setup executable and parameters
+                process.StartInfo.FileName = @"install-interception.exe";
+                process.StartInfo.Arguments = "/install";
+
+                if (System.Environment.OSVersion.Version.Major >= 6)
+                {
+                    process.StartInfo.Verb = "runas";
+                }
+
+                // Go
+                process.Start();
+
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    string line = process.StandardOutput.ReadLine();
+
+                    if (line == "Interception successfully installed. You must reboot for it to take effect.")
+                        MessageBox.Show(line, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else if (line == "" || line == "Copyright (C) 2008-2018 Francisco Lopes da Silva" ||
+                        line == "Interception command line installation tool")
+                    { }
+                    else
+                        throw new Exception(line);
+                }
+                IntInstall.Enabled = false;
+                RestartLbl.Visible = true;
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void Wizard_FormClosing(object sender, FormClosingEventArgs e)
@@ -73,9 +93,10 @@ namespace intercept
             DialogResult result = MessageBox.Show("The installation has not been completed,\nthe application will be closed. Are you sure?", "Continue",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-            if (result == DialogResult.Yes) {
+            if (result == DialogResult.Yes)
+            {
                 check = true;
-                Application.Exit(); 
+                Application.Exit();
             }
 
             e.Cancel = result == DialogResult.No;

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace intercept
+namespace interceptGUI
 {
     public partial class KeySetFrm : Form
     {

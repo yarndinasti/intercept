@@ -1,12 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using IWshRuntimeLibrary;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using IWshRuntimeLibrary;
 
-namespace intercept
+namespace interceptGUI
 {
     public partial class Form1 : Form
     {
@@ -16,7 +16,7 @@ namespace intercept
 
         string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                 @"\intercept\";
-        string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) + 
+        string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) +
                 ".lnk";
         string AHK = @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -35,6 +35,16 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
         public Form1()
         {
             InitializeComponent();
+
+            Process[] GetPArry = Process.GetProcesses();
+            foreach (Process testProcess in GetPArry)
+            {
+                string ProcessName = testProcess.ProcessName;
+
+                ProcessName = ProcessName.ToLower();
+                if (ProcessName.CompareTo("interceptgui") == 0)
+                    Application.Exit();
+            }
 
             _watcher = new FileSystemWatcher();
             _watcher.SynchronizingObject = this;
@@ -70,13 +80,14 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                     testProcess.Kill();
             }
 
-            if (active) { 
-                Process.Start(dataMacro + "keyboard.ahk"); 
+            if (active)
+            {
+                Process.Start(dataMacro + "keyboard.ahk");
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {            
+        {
             active = !active;
 
             if (active)
@@ -90,8 +101,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 runToolStripMenuItem.Enabled = true;
 
                 startMacro();
-                editAhk.Start();
-            } 
+            }
             else
             {
                 runBtn.Enabled = false;
@@ -103,7 +113,6 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 runToolStripMenuItem.Enabled = true;
 
                 stopMacro();
-                editAhk.Stop();
             }
         }
 
@@ -157,6 +166,17 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            string[] args = Environment.GetCommandLineArgs();
+            foreach (string arg in args)
+            {
+                if (arg == "/play")
+                {
+                    string Interception = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\" + @"\drivers\keyboard.sys");
+                    if (System.IO.File.Exists(Interception)) MessageBox.Show("Application cannot start because Interception not installed",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
             if (!Directory.Exists(dataMacro))
                 Directory.CreateDirectory(dataMacro);
 
@@ -169,7 +189,6 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
             checkStartup.Checked = System.IO.File.Exists(ShortcutPath);
 
-            string[] args = Environment.GetCommandLineArgs();
 
             foreach (string arg in args)
             {
@@ -186,7 +205,6 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                     runToolStripMenuItem.Text = "&Stop";
 
                     startMacro();
-                    editAhk.Start();
                 }
             }
         }
@@ -209,11 +227,6 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
             return ret != null;
         }
 
-        private void editAhk_Tick(object sender, EventArgs e)
-        {
-
-        }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>
             Application.Exit();
 
@@ -223,16 +236,16 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-                ShowInTaskbar = true;
-                notifyIcon.Visible = false;
-                Show();
+            ShowInTaskbar = true;
+            notifyIcon.Visible = false;
+            Show();
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
             //base.OnResize(e);
 
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
                 ShowInTaskbar = false;
                 notifyIcon.Visible = true;
@@ -242,34 +255,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.F5)
-            {
-                DialogResult result = MessageBox.Show("If the intercept, the application will be closed,\nare you sure?", "Really???",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.Yes)
-                {
-                    Process process = new Process();
-
-                    // Stop the process from opening a new window
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-
-                    // Setup executable and parameters
-                    process.StartInfo.FileName = @"install-interception.exe";
-                    process.StartInfo.Arguments = "/uninstall";
-
-                    if (System.Environment.OSVersion.Version.Major >= 6)
-                    {
-                        process.StartInfo.Verb = "runas";
-                    }
-
-                    // Go
-                    process.Start();
-                    Application.Exit();
-                }
-            }
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.F5) unsIntBtn_Click(sender, e);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -284,6 +270,54 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
                 shortcut.Arguments = "/tray /play";
                 shortcut.TargetPath = Environment.CurrentDirectory + @"\intercept.exe";
                 shortcut.Save();
+            }
+        }
+
+        private void unsIntBtn_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("If Interception uninstalled, the application will be closed,\nare you sure?", "Really???",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    Process process = new Process();
+
+                    // Stop the process from opening a new window
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = true;
+
+                    // Setup executable and parameters
+                    process.StartInfo.FileName = @"install-interception.exe";
+                    process.StartInfo.Arguments = "/uninstall";
+
+                    if (Environment.OSVersion.Version.Major >= 6)
+                        process.StartInfo.Verb = "runas";
+
+                    // Go
+                    process.Start();
+
+                    while (!process.StandardOutput.EndOfStream)
+                    {
+                        string line = process.StandardOutput.ReadLine();
+
+                        if (line == "Interception uninstalled. You must reboot for it to take effect.")
+                            MessageBox.Show(line, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else if (line == "" || line == "Copyright (C) 2008-2018 Francisco Lopes da Silva" ||
+                            line == "Interception command line installation tool")
+                        { }
+                        else
+                            throw new Exception("Interception already uninstalled, please reboot");
+
+                    }
+                    Application.Exit();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

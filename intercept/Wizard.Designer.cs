@@ -1,4 +1,4 @@
-﻿namespace intercept
+﻿namespace interceptGUI
 {
     partial class Wizard
     {

@@ -1,4 +1,4 @@
-﻿namespace intercept
+﻿namespace interceptGUI
 {
     partial class Form1
     {
@@ -33,13 +33,13 @@
             this.runBtn = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.ahkEditBtn = new System.Windows.Forms.Button();
-            this.editAhk = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkStartup = new System.Windows.Forms.CheckBox();
+            this.unsIntBtn = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,11 +72,6 @@
             this.ahkEditBtn.Text = "Setting Macro";
             this.ahkEditBtn.UseVisualStyleBackColor = true;
             this.ahkEditBtn.Click += new System.EventHandler(this.ahkEditBtn_Click);
-            // 
-            // editAhk
-            // 
-            this.editAhk.Interval = 150;
-            this.editAhk.Tick += new System.EventHandler(this.editAhk_Tick);
             // 
             // notifyIcon
             // 
@@ -124,11 +119,22 @@
             this.checkStartup.UseVisualStyleBackColor = true;
             this.checkStartup.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // unsIntBtn
+            // 
+            this.unsIntBtn.Location = new System.Drawing.Point(12, 41);
+            this.unsIntBtn.Name = "unsIntBtn";
+            this.unsIntBtn.Size = new System.Drawing.Size(203, 23);
+            this.unsIntBtn.TabIndex = 4;
+            this.unsIntBtn.Text = "Uninstall Interception (Alt + F5)";
+            this.unsIntBtn.UseVisualStyleBackColor = true;
+            this.unsIntBtn.Click += new System.EventHandler(this.unsIntBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(227, 142);
+            this.Controls.Add(this.unsIntBtn);
             this.Controls.Add(this.checkStartup);
             this.Controls.Add(this.ahkEditBtn);
             this.Controls.Add(this.button2);
@@ -154,13 +160,13 @@
         private System.Windows.Forms.Button runBtn;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button ahkEditBtn;
-        private System.Windows.Forms.Timer editAhk;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkStartup;
+        private System.Windows.Forms.Button unsIntBtn;
     }
 }
 
