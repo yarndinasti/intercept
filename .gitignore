@@ -9,19 +9,14 @@
 Prerequisites/
 
 ### VisualStudioCode ###
-.vscode/*
+*/.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
 
-#
-intercept_cmd/.vscode/*
-!intercept_cmd/.vscode/settings.json
-!intercept_cmd/.vscode/tasks.json
-!intercept_cmd/.vscode/launch.json
-!intercept_cmd/.vscode/extensions.json
+
 
 
 # Local History for Visual Studio Code
