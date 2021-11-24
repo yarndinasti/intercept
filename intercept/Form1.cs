@@ -60,11 +60,8 @@ namespace interceptGUI
 
         private void FileChanged(object sender, FileSystemEventArgs e)
         {
-            if (active)
-            {
-                AHK.Kill();
-                AHK.Start();
-            }
+            Thread.Sleep(800);
+            AHK.Start();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -102,20 +99,24 @@ namespace interceptGUI
             iniFile = new StreamReader(dataMacro + "keyremap.ini");
             txtFile = new StreamReader(dataMacro + "keyboardHID.txt");
 
+            // Create incercept cmd
+            interceptCMD = new Process();
+
+            // Stop the process from opening a new window
+            interceptCMD.StartInfo.RedirectStandardOutput = true;
+            interceptCMD.StartInfo.UseShellExecute = false;
+            interceptCMD.StartInfo.CreateNoWindow = true;
+
+            // Setup executable and parameters
+            interceptCMD.StartInfo.FileName = @"intercept_cmd.exe";
+            interceptCMD.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
+
+            // Create keyboard.ahk
+            AHK = new Process();
+            AHK.StartInfo.FileName = dataMacro + "keyboard.ahk";
+
             try
             {
-                interceptCMD = new Process();
-
-                // Stop the process from opening a new window
-                interceptCMD.StartInfo.RedirectStandardOutput = true;
-                interceptCMD.StartInfo.UseShellExecute = false;
-                interceptCMD.StartInfo.CreateNoWindow = true;
-
-                // Setup executable and parameters
-                interceptCMD.StartInfo.FileName = @"intercept_cmd.exe";
-                interceptCMD.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
-
-                // Go
                 interceptCMD.Start();
 
                 bool isRunning = !interceptCMD.WaitForExit(1500);
@@ -134,10 +135,6 @@ namespace interceptGUI
                 return;
             }
 
-            //Process.Start(dataMacro + "keyboard.ahk");
-
-            AHK = new Process();
-            AHK.StartInfo.FileName = dataMacro + "keyboard.ahk";
             AHK.Start();
         }
 
@@ -234,6 +231,7 @@ namespace interceptGUI
             ShowInTaskbar = true;
             notifyIcon.Visible = false;
             Show();
+            WindowState = FormWindowState.Normal;
         }
 
         private void Form1_Resize(object sender, EventArgs e)

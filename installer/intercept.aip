@@ -8,10 +8,10 @@
     <ROW Property="ARPPRODUCTICON" Value="GoogleNotoEmojiObjects62829keyboard_1.exe" Type="8"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="DSI"/>
-    <ROW Property="ProductCode" Value="1033:{A101DC4A-C62C-4A43-AD03-21D6A0132ECB} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{4811D719-F3ED-4654-8349-3A82FE09A3D6} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.1.2.0" Type="32" TargetFile="interceptGUI.exe"/>
+    <ROW Property="ProductVersion" Value="0.1.4.0" Type="32" TargetFile="interceptGUI.exe"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="AnyCPU_Release:Windows 9x/ME" ValueLocId="-"/>
