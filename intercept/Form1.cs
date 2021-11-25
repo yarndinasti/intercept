@@ -25,16 +25,6 @@ namespace interceptGUI
         {
             InitializeComponent();
 
-            Process[] GetPArry = Process.GetProcesses();
-            foreach (Process testProcess in GetPArry)
-            {
-                string ProcessName = testProcess.ProcessName;
-
-                ProcessName = ProcessName.ToLower();
-                if (ProcessName.CompareTo("interceptgui") == 0)
-                    Application.Exit();
-            }
-
             _watcher = new FileSystemWatcher();
             _watcher.SynchronizingObject = this;
             _watcher.Path = dataMacro;
@@ -60,8 +50,11 @@ namespace interceptGUI
 
         private void FileChanged(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(800);
-            AHK.Start();
+            if (active)
+            {
+                Thread.Sleep(800);
+                AHK.Start();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -157,14 +150,43 @@ namespace interceptGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            int intOpen = 0;
+            Process[] GetPArry = Process.GetProcesses();
+            foreach (Process testProcess in GetPArry)
+            {
+                string ProcessName = testProcess.ProcessName;
+
+                ProcessName = ProcessName.ToLower();
+                if (ProcessName.CompareTo("interceptgui") == 0)
+                    intOpen++; //Application.Exit();
+            }
+
+            if (intOpen > 1)
+                Application.Exit();
+
+            Process[] get = Process.GetProcesses();
+            foreach (Process testProcess in get)
+            {
+                string ProcessName = testProcess.ProcessName;
+
+                ProcessName = ProcessName.ToLower();
+                if (ProcessName.CompareTo("intercept_cmd") == 0)
+                    testProcess.Kill();
+            }
+
+
             string[] args = Environment.GetCommandLineArgs();
             foreach (string arg in args)
             {
                 if (arg == "/play")
                 {
                     string Interception = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\" + @"\drivers\keyboard.sys");
-                    if (System.IO.File.Exists(Interception)) MessageBox.Show("Application cannot start because Interception not installed",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!System.IO.File.Exists(Interception))
+                    {
+                        MessageBox.Show("Application cannot start because Interception not installed",
+                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Application.Exit();
+                    }
                 }
             }
 
@@ -257,11 +279,13 @@ namespace interceptGUI
                 System.IO.File.Delete(ShortcutPath);
             else
             {
-                object shDesktop = (object)"Desktop";
+                object shDesktop = "Desktop";
                 WshShell shell = new WshShell();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(ShortcutPath);
+                shortcut.TargetPath = Environment.CurrentDirectory + @"\interceptGUI.exe";
+                shortcut.WorkingDirectory = Application.StartupPath;
                 shortcut.Arguments = "/tray /play";
-                shortcut.TargetPath = Environment.CurrentDirectory + @"\intercept.exe";
+                shortcut.Description = "";
                 shortcut.Save();
             }
         }
