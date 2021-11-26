@@ -20,6 +20,7 @@ namespace interceptGUI
                 ".lnk";
 
         Process AHK, interceptCMD;
+        int AHKid;
 
         public Form1()
         {
@@ -54,6 +55,7 @@ namespace interceptGUI
             {
                 Thread.Sleep(800);
                 AHK.Start();
+                AHKid = AHK.Id;
             }
         }
 
@@ -129,12 +131,14 @@ namespace interceptGUI
             }
 
             AHK.Start();
+            AHKid = AHK.Id;
         }
 
         private void stopMacro()
         {
+            Process ahkProcess = Process.GetProcessById(AHKid);
             interceptCMD.Kill();
-            AHK.Kill();
+            ahkProcess.Kill();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
