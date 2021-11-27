@@ -8,7 +8,7 @@ Interception::Interception(InterceptionFilter filter)
 	if ( context == 0 ) {
 		printf("Oblitum Interception driver not loaded!");
 		ExitProcess(1);
-	} else printf("intercept is loaded");
+	}
 
 	interception_set_filter(context, interception_is_keyboard, filter);
 }

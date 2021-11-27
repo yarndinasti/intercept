@@ -294,6 +294,11 @@ namespace interceptGUI
             }
         }
 
+        private void generalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new SettingsFrm().ShowDialog();
+        }
+
         private void unsIntBtn_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("If Interception uninstalled, the application will be closed,\nare you sure?", "Really???",
