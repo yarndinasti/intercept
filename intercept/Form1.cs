@@ -41,12 +41,12 @@ namespace interceptGUI
 
         private void FileRenamed(object sender, RenamedEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
         }
 
         private void FileDeleted(object sender, FileSystemEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
+            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
         }
 
         private void FileChanged(object sender, FileSystemEventArgs e)
@@ -197,12 +197,14 @@ namespace interceptGUI
             if (!Directory.Exists(dataMacro))
                 Directory.CreateDirectory(dataMacro);
 
-            new Wizard().ShowDialog();
-            if (!System.IO.File.Exists(dataMacro + "keyboardHID.txt"))
-                new KeySetFrm().ShowDialog();
+            bool hasInt = CheckInterception();
+            bool hasConfig = System.IO.File.Exists(dataMacro + "settings.json");
+
+            if (!hasInt || !hasConfig)
+                new Wizard().ShowDialog();
 
             if (!System.IO.File.Exists(dataMacro + "keyboard.ahk"))
-                System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", keyremap.AHK());
+                System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
 
             checkStartup.Checked = System.IO.File.Exists(ShortcutPath);
 
@@ -225,6 +227,35 @@ namespace interceptGUI
                     startMacro();
                 }
             }
+        }
+
+        private bool CheckInterception()
+        {
+            bool result = false;
+            Process process = new Process();
+
+            // Stop the process from opening a new window
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+
+            // Setup executable and parameters
+            process.StartInfo.FileName = @"intercept_cmd.exe";
+            process.StartInfo.Arguments = "/check";
+
+            // Go
+            process.Start();
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                string line = process.StandardOutput.ReadLine();
+
+                if (line == "interception installed")
+                    result = true;  
+            }
+
+            Config.hasInt = result;
+            return result;
         }
 
         private void ahkEditBtn_Click(object sender, EventArgs e)

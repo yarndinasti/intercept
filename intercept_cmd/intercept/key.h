@@ -63,5 +63,6 @@ public:
 	int GetFilterNumber(void);
 	int Match(KeyStroke *stroke, char *source, Interception *in);
 	void Run(void);
+	void CheckInterception(void);
 };
 

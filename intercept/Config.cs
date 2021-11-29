@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace interceptGUI
 {
-    internal class keyremap
+    internal class Config
     {
+        public static bool hasInt = false;
+        public static string[] codeEditor = { "Atom", "Visual Studio Code", "Notepad++", "Sublime Text", "SciTE4AutoHotkey" };
 
         public static string AHK()
         {

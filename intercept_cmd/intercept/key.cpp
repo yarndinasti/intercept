@@ -191,8 +191,8 @@ void KeyFilter::Query(void)
 	in0->GetStroke();
 	delete in0;
 
-	printf("\nDefining filter\n\n");
-	printf("Press key which will trigger the combo\n\n");
+	printf("\nPress any key in 2nd Keyboard\n");
+	printf("then Keyboard id will be filled automatically\n\n");
 
 	// There will be key a key down event followed by a key up event. 
 	Interception *in = new Interception(INTERCEPTION_FILTER_KEY_ALL);
@@ -205,33 +205,21 @@ void KeyFilter::Query(void)
 	delete in;
 	
 	Print(0);
-
-	printf("\nEnter combo for this trigger, end with Esc\n");
-	printf("(Empty combo will inhibit trigger key)\n\n");
-	combo = new KeyCombo();
-	combo->Read(0x01); // SCANCODE_ESC
-
-	printf("\n\n");
-	this->label = strdup(ReadText("Enter filter label"));
-
-	printf("\n\n");
-	Print(1);
-	printf("\n");
 }
 
 void KeyFilter::Print(int showCombo)
 {
-	printf("  Trigger key: ");
-	trigger->Print();
-	printf("\n     Keyboard: %s", device);
-
-	if (showCombo) {
-		printf("\n        Combo: ");
-		combo->Print();
-		printf("\n        Label: [%s]", label);
-	}
-
-	printf("\n");
+	const char* output = device;
+    const size_t len = strlen(output) + 1;
+    HGLOBAL hMem =  GlobalAlloc(GMEM_MOVEABLE, len);
+    memcpy(GlobalLock(hMem), output, len);
+    GlobalUnlock(hMem);
+    OpenClipboard(0);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT, hMem);
+    CloseClipboard();
+	printf("Copied");
+	ExitProcess(1);
 }
 
 int KeyFilter::Match(KeyStroke *stroke, char *source, Interception *in)
@@ -359,6 +347,13 @@ int KeyFilterSet::Match(KeyStroke *stroke, char *source, Interception *in)
 	}
 
 	return -1;
+}
+
+void KeyFilterSet::CheckInterception(void)
+{
+	Interception *in = new Interception(INTERCEPTION_FILTER_KEY_ALL);
+	printf("interception installed");
+	ExitProcess(1);
 }
 
 void KeyFilterSet::Run(void)

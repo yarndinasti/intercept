@@ -29,7 +29,7 @@ namespace interceptGUI
             string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                 @"\intercept\";
 
-            string files = keyremap.KeyMap().Replace("{MyKeyboards}", keyKeyboard.Text);
+            string files = Config.KeyMap().Replace("{MyKeyboards}", keyKeyboard.Text);
             File.WriteAllText(dataMacro + "keyremap.ini", files);
 
             File.WriteAllText(dataMacro + "keyboardHID.txt", keyKeyboard.Text);
@@ -48,13 +48,26 @@ namespace interceptGUI
 
         private void getKeyDevice_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Press any key in 2nd keyboard in blank console window for get Keyboard HID",
+                "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             Process process = new Process();
 
             process.StartInfo.FileName = @"intercept_cmd.exe";
-            process.StartInfo.Arguments = "/ini " + Path.GetTempPath() + "temp.ini";
+            process.StartInfo.Arguments = "/add";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
 
             // Go
             process.Start();
+            process.WaitForExit();
+            while (!process.StandardOutput.EndOfStream)
+            {
+                string line = process.StandardOutput.ReadLine();
+
+                if (line == "Copied")
+                    keyKeyboard.Text = Clipboard.GetText();
+            }
         }
 
         private void KeySetFrm_FormClosing(object sender, FormClosingEventArgs e)
