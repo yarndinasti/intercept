@@ -332,6 +332,11 @@ namespace interceptGUI
             
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutFrm().ShowDialog();
+        }
+
         private void generalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (active)
