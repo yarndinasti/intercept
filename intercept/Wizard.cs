@@ -28,13 +28,11 @@ namespace interceptGUI
             InitializeComponent();
         }
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
-
             if (m.Msg.Equals(WM_QUERYENDSESSION))
-            {
                 systemShutdown = true;
-            }
+
             // If this is WM_QUERYENDSESSION, the closing event should be fired in the base WndProc
             base.WndProc(ref m);
         }
@@ -91,7 +89,7 @@ namespace interceptGUI
                             AHKinstalled.Checked = true;
 
                         if (Config.codeEditor.Any(displayName.Contains))
-                            comboSource.Add(displayIcon, displayName);
+                            comboSource.Add((displayName == "Atom" ) ? displayIcon.Replace("app.ico", "atom.exe") : displayIcon, displayName);
                     }
                 }
             }
@@ -117,7 +115,7 @@ namespace interceptGUI
             }
 
 
-            if (AHKinstalled.Checked && InterceptionInstalled.Checked && settings == null)
+            if (AHKinstalled.Checked && InterceptionInstalled.Checked && !File.Exists(dataMacro + "settings.json"))
             {
                 HIDbtn.Enabled = true;
                 HIDtxt.Enabled = true;
@@ -240,7 +238,7 @@ namespace interceptGUI
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            if (settings == null)
+            if (!File.Exists(dataMacro + "settings.json"))
             {
                 string key = ((KeyValuePair<string, string>)CodeCmb.SelectedItem).Key;
 

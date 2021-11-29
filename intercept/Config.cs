@@ -14,18 +14,275 @@ namespace interceptGUI
         public static string AHK()
         {
             return @"#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
+;SetWorkingDir, C:\AHK\2nd-keyboard\ ;Or you could put the directory here. Whatevs.
+Menu, Tray, Icon, shell32.dll, 283 ;changes the taskbar icon to something
+;SetKeyDelay, 0 ;IDK exactly what this does.
 
-#SingleInstance force
-#if (getKeyState(""F23"", ""P""))
-  F23::return
-; Code here!!!
+;;EXACT LOCATION FOR WHERE TO PUT THIS SCRIPT:
+; C:\AHK\2nd-keyboard\Intercept
 
-; End Code
+;;Location for where to put a shortcut to the script, such that it will start when Windows starts:
+;;  Here for just yourself:
+;;  C:\Users\YOUR_USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+;;  Or here for all users:
+;;  C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
+
+#NoEnv
+SendMode Input
+#InstallKeybdHook
+;#InstallMouseHook ;<--You'll want to use this if you have scripts that use the mouse.
+#UseHook On
+#SingleInstance force ;only one instance of this script may run at a time!
+#MaxHotkeysPerInterval 2000
+
+;;The lines below are optional. Delete them if you need to.
+#HotkeyModifierTimeout 60 ; https://autohotkey.com/docs/commands/_HotkeyModifierTimeout.htm
+#KeyHistory 200 ; https://autohotkey.com/docs/commands/_KeyHistory.htm ; useful for debugging.
+#MenuMaskKey vk07 ;https://autohotkey.com/boards/viewtopic.php?f=76&t=57683
+#WinActivateForce ;https://autohotkey.com/docs/commands/_WinActivateForce.htm ;prevent taskbar flashing.
+;;The lines above are optional. Delete them if you need to.
+
+;________________________________________________________________________________________
+;                                                                                        
+;		    2ND KEYBOARD USING INTERCEPTION AND INTERCEPT.exe (Logitech K120)            
+;________________________________________________________________________________________
+
+; Please watch https://www.youtube.com/watch?v=y3e_ri-vOIo for a comprehensive tutorial. 
+;________________________________________________________________________________________
+
+; DANGER: Installing interception may cause your USB devices to stop working sometimes, because it is limited to supporting only 10 of each device class. You have to uninstall it to fix that. Here is a follow up video with new information: https://www.youtube.com/watch?v=Hn18vv--sFY
+
+; For this reason, I now use the Hasu USB to USB keyboard converter. It's sweet.
+; https://www.1upkeyboards.com/shop/controllers/usb-to-usb-converter/
+
+;;|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||;;
+;;||||||||||||| BEGIN SECOND KEYBOARD INTERCEPTION F23 ASSIGNMENTS ||||||||||||;;
+;;|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||;;
+
+;; You should DEFINITELY not be trying to add a 2nd keyboard unless you're already
+;; familiar with how AutoHotkey works. I recommend that you at least take this tutorial:
+;; https://autohotkey.com/docs/Tutorial.htm
+
+;; You should probably use something better than Notepad for your scripting. (Do NOT use Word.)
+;; I use Notepad++. ""Real"" programmers recoil from it, but it's fine for my purposes.
+; ; https://notepad-plus-plus.org/
+            ; ; You'll probably want the syntax highlighting:  https://stackoverflow.com/questions/45466733/autohotkey-syntax-highlighting-in-notepad
+
+             ; ; ; WARNING - THIS IS KINDA UNTESTED SINCE I STOPPED USING IT. LET ME KNOW IF YOU HAVE ANY ISSUES, BY LEAVING A GITHUB... ISSUE.https://github.com/TaranVH/2nd-keyboard/issues
+
+#if (getKeyState(""F23"", ""P"")) ;<--Everything after this line will only happen on the secondary keyboard that uses F23.
+  F23::return ;this line is mandatory for proper functionality
+
+escape::
+
+F1::
+F2::
+F3::
+F4::
+F5::
+F6::
+F7::
+F9::
+F8::
+F10::
+F11::
+F12::
+  ;;Note that the assignment on the above line will apply to ALL prior lines ending in ""::""
+  ;;...which you should know from the AHK tutorial I linked you to.
+
+  ;;------------------------NEXT ROW--------------------------;;
+
+`::
+1::
+2::
+3::
+4::
+5::
+6::
+7::
+8::
+9::
+0::
+-::
+=::
+backspace::
+
+  ;;------------------------NEXT ROW--------------------------;;
+
+tab::
+q::
+w::
+e::
+r::
+t::
+y::
+u::
+i::
+o::
+p::
+[::
+]::
+\::
+
+  ;;------------------------NEXT ROW--------------------------;;
+
+a::
+s::
+d::
+f::
+g::
+h::
+j::
+K::
+l::
+  `;::
+  ;for the above line, (semicolon) note that the ` is necessary as an escape character -- and that the syntax highlighting might get it wrong.
+'::
+enter::
+
+  ;;------------------------NEXT ROW--------------------------;;
+
+z::
+x::
+c::
+v::
+b::
+n::
+m::
+,::
+.::
+/::
+
+space::
+  ;;And THAT^^ is how you do multi-line instructions in AutoHotkey.
+  ;;Notice that the very first line, ""space::"" cannot have anything else on it.
+  ;;Again, these are fundamentals that you should have learned from the tutorial.
+
+  ;;================= MODIFIERS REMAPPED ======================;;
+
+  ;; When you replace these with your own functions, I recommend that you do NOT delete the tooltips. Just comment them out. That way, you always know what was changed to what. It gets very confusing very quickly otherwise.
+  ;; Here is the full list of scan code substitutions that I made:
+  ;; https://docs.google.com/spreadsheets/d/1GSj0gKDxyWAecB3SIyEZ2ssPETZkkxn67gdIwL1zFUs/edit#gid=824607963
+
+  ; Replacing Left Shift
+SC070::
+  ; Replacing Left Ctrl
+  SC071::
+  ; Replacing Start Win (Left Win)
+  SC072::
+  ; Replacing Left Alt
+  SC073::
+  ; Replacing Right Alt
+  SC077::
+  ; Replacing Right Win (when existed)
+  SC078::
+  ; Replacing Menu context key
+  SC079::
+  ; Replacing Right Ctrl
+  SC07B::
+  ; Replacing Right Shift
+  SC07D::
+
+  ;;================= LOCKING KEYS ======================;;
+
+; Replacing CapsLock
+  F20::
+; Replacing NumLock
+  SC05C::
+  ;Numlock is an AWFUL key. I prefer to leave it permanently on.
+  ;It's been changed to International 6, so you can use it with no fear that it'll mess up your numpad.
+; Replacing ScrollLock
+  SC061::
+
+  ;;================= NEXT SECTION ======================;;
+
+PrintScreen::
+; Replacing Pause Break
+  SC07E::
+
+  ;;Don't use the 3 keys below for your 2nd keyboard!
+  ;Pause::msgbox, The Pause/Break key is a huge PITA. That's why I remapped it to SC07E
+  ;Break::msgbox, Or is it THIS key? WHO KNOWS!
+  ;CtrlBreak::msgbox, I have no idea what Ctrlbreak is. But it shows up sometimes.
+  ;;Don't use the 3 keys above for your 2nd keyboard! Just don't!!
+
+insert::
+delete::
+
+home::
+end::
+
+pgup::
+pgdn::
+
+  ;;================= NEXT SECTION ======================;;
+
+up::
+down::
+left::
+  right::
+
+  ;;================== THE NUMPAD ======================;;
+
+numpad0::
+numpad1::
+numpad2::
+numpad3::
+numpad4::
+numpad5::
+numpad6::
+numpad7::
+numpad8::
+  numpad9::
+
+  ;;NumLock::tooltip, DO NOT USE THIS IN YOUR 2ND KEYBOARD!
+numpadDiv::
+numpadMult::
+numpadSub::
+numpadAdd::
+numpadEnter::
+numpadDot::
+
+#if ;this line will end the F23 secondary keyboard assignments.
+
+  ;;;--------------------IMPORTANT: HOW TO USE #IF THINGIES----------------------
+
+  ;;You can use more than one #if thingy at a time, but it must be done like so:
+#if (getKeyState(""F23"", ""P"")) and if WinActive(""ahk_exe Adobe Premiere Pro.exe"")
+    F1::msgbox, You pressed F1 on your secondary keyboard while inside of Premiere Pro
+
+  ;; HOWEVER, You still would still need to block F1 using #if (getKeyState(""F23"", ""P""))
+  ;; If you don't, it'll pass through normally, any time Premiere is NOT active.
+  ;; Does that make sense? I sure hope so.
+
+  ;; Alternatively, you can use the following: (Comment it in, and comment out other instances of F1::)
+  ; #if (getKeyState(""F23"", ""P""))
+  ; F1::
+  ; if WinActive(""ahk_exe Adobe Premiere Pro.exe"")
+  ; {
+  ; msgbox, You pressed F1 on your secondary keyboard while inside of Premiere Pro
+  ; msgbox, And you did it by using if WinActive()
+  ; }
+  ; else
+  ; msgbox, You pressed F1 on your secondary keyboard while NOT inside of Premiere Pro
+  ;;This is easier to understand, but it's not as clean of a solution.
+
+  ;; #if (getKeyState(""F23"", ""P"")) && (uselayer = 0) ;;you can also use a varibable like so, but I don't.
+
+  ;; Here is a discussion about all this:
+  ;; https://github.com/TaranVH/2nd-keyboard/issues/65
+
+  ;;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ;;+|||||||||+ END OF INTERCEPTION SECOND KEYBOARD F23 ASSIGNMENTS +|||||||||||||+
+  ;;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  ;;Note that this whole script was written for North American keyboard layouts.
+  ;;IDK what you foreign language peoples are gonna have to do!
+  ;;At the very least, you'll have some duplicate keys.
+
 #if
-  ;Done with F23";
+";
         }
         public static string KeyMap()
         {

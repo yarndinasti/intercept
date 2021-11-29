@@ -1,8 +1,9 @@
-﻿using IWshRuntimeLibrary;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -10,17 +11,18 @@ namespace interceptGUI
 {
     public partial class Form1 : Form
     {
-        bool active = false;
-        StreamReader iniFile, txtFile;
+        StreamReader iniFile, jsonFile;
         private FileSystemWatcher _watcher;
+        bool active = false;
 
         string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                 @"\intercept\";
-        string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) +
-                ".lnk";
 
         Process AHK, interceptCMD;
         int AHKid;
+
+        private int WM_QUERYENDSESSION = 0x11;
+        private bool systemShutdown = false;
 
         public Form1()
         {
@@ -41,12 +43,12 @@ namespace interceptGUI
 
         private void FileRenamed(object sender, RenamedEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
+            File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
         }
 
         private void FileDeleted(object sender, FileSystemEventArgs e)
         {
-            System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
+            File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
         }
 
         private void FileChanged(object sender, FileSystemEventArgs e)
@@ -57,6 +59,15 @@ namespace interceptGUI
                 AHK.Start();
                 AHKid = AHK.Id;
             }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg.Equals(WM_QUERYENDSESSION))
+                systemShutdown = true;
+
+            // If this is WM_QUERYENDSESSION, the closing event should be fired in the base WndProc
+            base.WndProc(ref m);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -92,7 +103,7 @@ namespace interceptGUI
         private void startMacro()
         {
             iniFile = new StreamReader(dataMacro + "keyremap.ini");
-            txtFile = new StreamReader(dataMacro + "keyboardHID.txt");
+            jsonFile = new StreamReader(dataMacro + "settings.json");
 
             // Create incercept cmd
             interceptCMD = new Process();
@@ -139,10 +150,19 @@ namespace interceptGUI
             Process ahkProcess = Process.GetProcessById(AHKid);
             interceptCMD.Kill();
             ahkProcess.Kill();
+
+            iniFile.Close();
+            jsonFile.Close();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (systemShutdown)
+            {
+                stopMacro();
+                return;
+            }
+
             if (!active) return;
 
             DialogResult result = MessageBox.Show("The macro will be dismissed as this app exit.\nAre you sure?", "Warning",
@@ -185,7 +205,7 @@ namespace interceptGUI
                 if (arg == "/play")
                 {
                     string Interception = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\" + @"\drivers\keyboard.sys");
-                    if (!System.IO.File.Exists(Interception))
+                    if (!File.Exists(Interception))
                     {
                         MessageBox.Show("Application cannot start because Interception not installed",
                                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -198,16 +218,13 @@ namespace interceptGUI
                 Directory.CreateDirectory(dataMacro);
 
             bool hasInt = CheckInterception();
-            bool hasConfig = System.IO.File.Exists(dataMacro + "settings.json");
+            bool hasConfig = File.Exists(dataMacro + "settings.json");
 
             if (!hasInt || !hasConfig)
                 new Wizard().ShowDialog();
 
-            if (!System.IO.File.Exists(dataMacro + "keyboard.ahk"))
-                System.IO.File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
-
-            checkStartup.Checked = System.IO.File.Exists(ShortcutPath);
-
+            if (!File.Exists(dataMacro + "keyboard.ahk"))
+                File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
 
             foreach (string arg in args)
             {
@@ -251,33 +268,27 @@ namespace interceptGUI
                 string line = process.StandardOutput.ReadLine();
 
                 if (line == "interception installed")
-                    result = true;  
+                    result = true;
             }
 
             Config.hasInt = result;
             return result;
         }
 
-        private void ahkEditBtn_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string uninstall_user = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
-            bool VscodeUser = KeyExists(Registry.CurrentUser.OpenSubKey(uninstall_user), "{771FD6B0-FA20-440A-A002-3B3BAC16DC50}_is1");
+            if (!active) return;
 
-            if (VscodeUser)
-                Process.Start(@"C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code\Code.exe", dataMacro + "keyboard.ahk");
-            else
-                Process.Start("Notepad.exe", dataMacro + "keyboard.ahk");
+            DialogResult result = MessageBox.Show("The macro will be dismissed as this app exit.\nAre you sure?", "Warning",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes) {
+                active = false;
+                stopMacro();
+                Application.Exit();
+            }
+            
         }
-
-        private bool KeyExists(RegistryKey baseKey, string subKeyName)
-        {
-            RegistryKey ret = baseKey.OpenSubKey(subKeyName);
-
-            return ret != null;
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>
-            Application.Exit();
 
 
         private void runToolStripMenuItem_Click(object sender, EventArgs e) =>
@@ -303,86 +314,43 @@ namespace interceptGUI
             }
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void aHKSyntaxToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.F5) unsIntBtn_Click(sender, e);
-        }
+            string osNameAndVersion = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            int build_ver = Int32.Parse(osNameAndVersion.Split('.').Last());
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!checkStartup.Checked)
-                System.IO.File.Delete(ShortcutPath);
-            else
+            if (build_ver >= 22000)
             {
-                object shDesktop = "Desktop";
-                WshShell shell = new WshShell();
-                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(ShortcutPath);
-                shortcut.TargetPath = Environment.CurrentDirectory + @"\interceptGUI.exe";
-                shortcut.WorkingDirectory = Application.StartupPath;
-                shortcut.Arguments = "/tray /play";
-                shortcut.Description = "";
-                shortcut.Save();
+                MessageBox.Show("Since Windows 11, the default browser system is changed," +
+                    " we will bring the default OS in the future." +
+                    " For now, click OK and paste it in your favorite browser", "Browser Default", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Clipboard.SetText("http://xahlee.info/mswin/autohotkey.html");
+            } else {
+                Process.Start("http://xahlee.info/mswin/autohotkey.html");
             }
+            
         }
 
         private void generalToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (active)
+            {
+                MessageBox.Show("Settings cannot be used while the system is running", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             new SettingsFrm().ShowDialog();
         }
 
-        private void unsIntBtn_Click(object sender, EventArgs e)
+        private void editMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("If Interception uninstalled, the application will be closed,\nare you sure?", "Really???",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            ConfigSettings.Settings settings = new ConfigSettings.Settings();
+            string jsonSettings = File.ReadAllText(dataMacro + "settings.json");
+            settings = JsonConvert.DeserializeObject<ConfigSettings.Settings>(jsonSettings);
 
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    Process process = new Process();
-
-                    // Stop the process from opening a new window
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-
-                    // Setup executable and parameters
-                    process.StartInfo.FileName = @"install-interception.exe";
-                    process.StartInfo.Arguments = "/uninstall";
-
-                    if (Environment.OSVersion.Version.Major >= 6)
-                        process.StartInfo.Verb = "runas";
-
-                    // Go
-                    process.Start();
-
-                    while (!process.StandardOutput.EndOfStream)
-                    {
-                        string line = process.StandardOutput.ReadLine();
-
-                        if (line == "Interception uninstalled. You must reboot for this to take effect.")
-                            MessageBox.Show(line, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        else if (line == "" || line == "Copyright (C) 2008-2018 Francisco Lopes da Silva" ||
-                            line == "Interception command line installation tool")
-                        { }
-                        else
-                            throw new Exception("Interception already uninstalled, please reboot");
-
-                    }
-                    Application.Exit();
-                }
-                catch (Exception err)
-                {
-                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            KeySetFrm keyfrm = new KeySetFrm();
-            keyfrm.edit = true;
-            keyfrm.ShowDialog();
+            Process.Start(settings.code_editor, dataMacro + "keyboard.ahk");
         }
     }
 }
