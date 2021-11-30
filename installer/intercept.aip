@@ -11,10 +11,10 @@
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="AnyCPU_Release:welcome.jpg" Type="1" MsiKey="DialogBitmap"/>
     <ROW Property="Manufacturer" Value="DSI"/>
-    <ROW Property="ProductCode" Value="1033:{C2EC9CEB-DC64-4DF6-A313-FC12A9B4BA5D} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{77B64367-B0B7-40EA-B2CA-74F32488924F} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.2.2.0" Type="32" TargetFile="interceptGUI.exe"/>
+    <ROW Property="ProductVersion" Value="0.2.3.0" Type="32" TargetFile="interceptGUI.exe"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
