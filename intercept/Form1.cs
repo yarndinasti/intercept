@@ -157,13 +157,7 @@ namespace interceptGUI
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (systemShutdown)
-            {
-                if (active) stopMacro();
-                return;
-            }
-
-            if (!active) return;
+            if (!active || systemShutdown) return;
 
             DialogResult result = MessageBox.Show("The macro will be dismissed as this app exit.\nAre you sure?", "Warning",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
