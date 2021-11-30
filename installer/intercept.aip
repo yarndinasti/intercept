@@ -4,17 +4,16 @@
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="1"/>
-    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="AnyCPU_Release:1"/>
     <ROW Property="ARPPRODUCTICON" Value="intercept.exe" Type="8"/>
     <ROW Property="BannerBitmap" Value="banner" MultiBuildValue="AnyCPU_Release:banner.jpg" Type="1" MsiKey="BannerBitmap"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="AnyCPU_Release:welcome.jpg" Type="1" MsiKey="DialogBitmap"/>
     <ROW Property="Manufacturer" Value="DSI"/>
-    <ROW Property="ProductCode" Value="1033:{77B64367-B0B7-40EA-B2CA-74F32488924F} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{09FFA73A-B6C1-4812-8BA7-66019C4BCCEC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.2.3.0" Type="32" TargetFile="interceptGUI.exe"/>
+    <ROW Property="ProductVersion" Value="0.2.5.0" Type="32" TargetFile="interceptGUI.exe"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
