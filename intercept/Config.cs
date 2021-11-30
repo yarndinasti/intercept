@@ -325,10 +325,10 @@ numpadDot::
 
 ;;;BEGIN LOGITECH K120 KEYBOARD, USING F23;;;;
 
-[Escape -> RELEASE F23]
-device={MyKeyboards}
-trigger=1,0,0
-combo=6E,0,1
+;[Escape -> RELEASE F23]
+;device={MyKeyboards}
+;trigger=1,0,0
+;combo=6E,0,1
 [ESCAPE KEY - POSSIBLY UNWISE TO HAVE]
 device={MyKeyboards}
 trigger=1,0,0
