@@ -5,15 +5,16 @@
     <ROW Property="AI_CURRENT_YEAR" Value="2021" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="1"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPNOMODIFY" MultiBuildValue="AnyCPU_Release:1"/>
     <ROW Property="ARPPRODUCTICON" Value="intercept.exe" Type="8"/>
     <ROW Property="BannerBitmap" Value="banner" MultiBuildValue="AnyCPU_Release:banner.jpg" Type="1" MsiKey="BannerBitmap"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="AnyCPU_Release:welcome.jpg" Type="1" MsiKey="DialogBitmap"/>
     <ROW Property="Manufacturer" Value="DSI"/>
-    <ROW Property="ProductCode" Value="1033:{3F3A951B-5AFE-46A8-AB05-C0FE108E839D} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{C2EC9CEB-DC64-4DF6-A313-FC12A9B4BA5D} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.1.8.0" Type="32" TargetFile="interceptGUI.exe"/>
+    <ROW Property="ProductVersion" Value="0.2.2.0" Type="32" TargetFile="interceptGUI.exe"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
@@ -29,14 +30,17 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
     <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Intercept_Dir" Directory_Parent="ProgramMenuFolder" DefaultDir="INTERC~1|Intercept"/>
+    <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
-    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{CE1C132D-7B55-48B5-893D-321B185DC636}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="Intercept" ComponentId="{0A4BBC0F-D2FC-4DA6-B772-6456370DED7C}" Directory_="Intercept_Dir" Attributes="0"/>
     <ROW Component="Interop.IWshRuntimeLibrary.dll" ComponentId="{66C4D9BE-131E-40D1-9694-F4A175E133A4}" Directory_="APPDIR" Attributes="0" KeyPath="Interop.IWshRuntimeLibrary.dll"/>
     <ROW Component="Microsoft.CSharp.dll" ComponentId="{F21AD27B-6225-4AFE-9EBB-40A3D353EFD8}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.CSharp.dll"/>
+    <ROW Component="Newtonsoft.Json.dll" ComponentId="{5202C620-0FD0-4386-A172-8E4092C28237}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
     <ROW Component="ProductInformation" ComponentId="{D19C8858-5264-424D-94E0-AC2CB74E1B6E}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{C0DC9C5F-2324-4EEB-85E8-4C1735008F58}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="System.Core.dll" ComponentId="{C8277CE4-E8AC-4CC1-A2AB-DC979E4B990A}" Directory_="APPDIR" Attributes="0" KeyPath="System.Core.dll"/>
@@ -45,6 +49,7 @@
     <ROW Component="System.Deployment.dll" ComponentId="{0427959A-C4CA-4B0E-B7C1-2CF5CFD72064}" Directory_="APPDIR" Attributes="0" KeyPath="System.Deployment.dll"/>
     <ROW Component="System.Drawing.dll" ComponentId="{5BDA8892-67A7-457E-8054-1EC69509A19C}" Directory_="APPDIR" Attributes="0" KeyPath="System.Drawing.dll"/>
     <ROW Component="System.Net.Http.dll" ComponentId="{375684C8-0351-482D-B5D2-691B5B959D4E}" Directory_="APPDIR" Attributes="0" KeyPath="System.Net.Http.dll"/>
+    <ROW Component="System.Runtime.InteropServices.RuntimeInformation.dll" ComponentId="{2659C384-ED92-4BE7-94C4-DA3553387293}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.InteropServices.RuntimeInformation.dll"/>
     <ROW Component="System.Windows.Forms.dll" ComponentId="{7092BE72-D852-42F2-BA0A-259246EF3D48}" Directory_="APPDIR" Attributes="0" KeyPath="System.Windows.Forms.dll"/>
     <ROW Component="System.Xml.Linq.dll" ComponentId="{B0457FD7-78BA-493B-9286-AC3EF9A4B050}" Directory_="APPDIR" Attributes="0" KeyPath="System.Xml.Linq.dll"/>
     <ROW Component="System.Xml.dll" ComponentId="{F37FD7B1-7A10-4D30-9F10-1411D7664BFC}" Directory_="APPDIR" Attributes="0" KeyPath="System.Xml.dll"/>
@@ -77,6 +82,8 @@
     <ROW File="intercept_cmd.exe" Component_="intercept_cmd.exe" FileName="INTERC~2.EXE|intercept_cmd.exe" Attributes="0" SourcePath="..\intercept\bin\Release\intercept_cmd.exe" SelfReg="false" DigSign="true"/>
     <ROW File="interceptGUI.exe" Component_="interceptGUI.exe" FileName="INTERC~3.EXE|interceptGUI.exe" Attributes="0" SourcePath="..\intercept\bin\Release\interceptGUI.exe" SelfReg="false" DigSign="true"/>
     <ROW File="interceptGUI.exe.config" Component_="interceptGUI.exe.config" FileName="INTERC~1.CON|interceptGUI.exe.config" Attributes="0" SourcePath="..\intercept\bin\Release\interceptGUI.exe.config" SelfReg="false"/>
+    <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="..\intercept\bin\Release\Newtonsoft.Json.dll" SelfReg="false"/>
+    <ROW File="System.Runtime.InteropServices.RuntimeInformation.dll" Component_="System.Runtime.InteropServices.RuntimeInformation.dll" FileName="SYSTE~10.DLL|System.Runtime.InteropServices.RuntimeInformation.dll" Attributes="0" SourcePath="..\intercept\bin\Release\System.Runtime.InteropServices.RuntimeInformation.dll" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -134,6 +141,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
     <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
+    <ROW Directory_="Intercept_Dir" Component_="Intercept" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
@@ -171,6 +179,9 @@
     <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
     <ROW Feature_="MainFeature" Component_="interceptGUI.exe"/>
     <ROW Feature_="MainFeature" Component_="interceptGUI.exe.config"/>
+    <ROW Feature_="MainFeature" Component_="Newtonsoft.Json.dll"/>
+    <ROW Feature_="MainFeature" Component_="System.Runtime.InteropServices.RuntimeInformation.dll"/>
+    <ROW Feature_="MainFeature" Component_="Intercept"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="intercept.exe" SourcePath="..\intercept\intercept.ico" Index="0"/>
@@ -200,7 +211,7 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="intercept" Directory_="StartMenuFolder" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="intercept" Directory_="Intercept_Dir" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="intercept_1" Directory_="SHORTCUTDIR" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="intercept_2" Directory_="DesktopFolder" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
