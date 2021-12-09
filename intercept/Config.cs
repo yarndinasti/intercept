@@ -690,14 +690,14 @@ combo=6E,0,0|4c,0,0|4c,0,1|6E,0,1
 ;;IF you want to turn ANY key into a modifier key,
 ;;The code below is the only reliable method for doing so.
 ;;But, do not mix the SHIFT key with the numpad. it causes nothing but heartache, since many programs seem to treat the results differently.
-[num5 down changed to ctrl down, WITH f23 down]
-device=HID\VID_1A2C&PID_0B2A&REV_0110&MI_00
-trigger=4c,0,0
-combo=6E,0,0|1d,0,0
-[num5 up changed to ctrl up, WITH f23 up]
-device=HID\VID_1A2C&PID_0B2A&REV_0110&MI_00
-trigger=4c,0,1
-combo=1d,0,1|6E,0,1
+;[num5 down changed to ctrl down, WITH f23 down]
+;device=HID\VID_1A2C&PID_0B2A&REV_0110&MI_00
+;trigger=4c,0,0
+;combo=6E,0,0|1d,0,0
+;[num5 up changed to ctrl up, WITH f23 up]
+;device=HID\VID_1A2C&PID_0B2A&REV_0110&MI_00
+;trigger=4c,0,1
+;combo=1d,0,1|6E,0,1
 
 ;; 1d,0,0 ;<-this is left CTRL
 ;; 2a,0,0 ;<-this is left shift
