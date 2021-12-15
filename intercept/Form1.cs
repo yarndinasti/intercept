@@ -18,7 +18,7 @@ namespace interceptGUI
 
         string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                 @"\intercept\";
-        string pogramData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
+        string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
                 @"\intercept\";
 
         Process AHK, interceptCMD;
@@ -105,8 +105,8 @@ namespace interceptGUI
 
         private void startMacro()
         {
-            iniFile = new StreamReader(pogramData + "keyremap.ini");
-            jsonFile = new StreamReader(pogramData + "settings.json");
+            iniFile = new StreamReader(programData + "keyremap.ini");
+            jsonFile = new StreamReader(programData + "settings.json");
 
             // Create incercept cmd
             interceptCMD = new Process();
@@ -118,7 +118,7 @@ namespace interceptGUI
 
             // Setup executable and parameters
             interceptCMD.StartInfo.FileName = @"intercept_cmd.exe";
-            interceptCMD.StartInfo.Arguments = "/apply /ini " + pogramData + "keyremap.ini";
+            interceptCMD.StartInfo.Arguments = "/apply /ini " + programData + "keyremap.ini";
 
             // Create keyboard.ahk
             AHK = new Process();
@@ -216,20 +216,20 @@ namespace interceptGUI
             if (!Directory.Exists(dataMacro))
                 Directory.CreateDirectory(dataMacro);
 
-            if (!Directory.Exists(pogramData))
-                Directory.CreateDirectory(pogramData);
+            if (!Directory.Exists(programData))
+                Directory.CreateDirectory(programData);
 
             if (File.Exists(dataMacro + "settings.json"))
             {
-                File.Copy(dataMacro + "settings.json", pogramData + "settings.json");
-                File.Copy(dataMacro + "keyremap.ini", pogramData + "keyremap.ini");
+                File.Copy(dataMacro + "settings.json", programData + "settings.json");
+                File.Copy(dataMacro + "keyremap.ini", programData + "keyremap.ini");
 
                 File.Delete(dataMacro + "settings.json");
                 File.Delete(dataMacro + "keyremap.ini");
             }
 
             bool hasInt = CheckInterception();
-            bool hasConfig = File.Exists(pogramData + "settings.json");
+            bool hasConfig = File.Exists(programData + "settings.json");
 
             if (!hasInt || !hasConfig)
                 new Wizard().ShowDialog();

@@ -13,7 +13,7 @@ namespace interceptGUI
 {
     public partial class Wizard : Form
     {
-        string pogramData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
+        string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
                            @"\intercept\";
 
         ConfigSettings.Settings settings;
@@ -99,9 +99,9 @@ namespace interceptGUI
             CodeCmb.DisplayMember = "Value";
             CodeCmb.ValueMember = "Key";
 
-            if (File.Exists(pogramData + "settings.json"))
+            if (File.Exists(programData + "settings.json"))
             {
-                string jsonSettings = File.ReadAllText(pogramData + "settings.json");
+                string jsonSettings = File.ReadAllText(programData + "settings.json");
                 settings = JsonConvert.DeserializeObject<ConfigSettings.Settings>(jsonSettings);
 
                 HIDtxt.Text = settings.keyboard;
@@ -115,7 +115,7 @@ namespace interceptGUI
             }
 
 
-            if (AHKinstalled.Checked && InterceptionInstalled.Checked && !File.Exists(pogramData + "settings.json"))
+            if (AHKinstalled.Checked && InterceptionInstalled.Checked && !File.Exists(programData + "settings.json"))
             {
                 HIDbtn.Enabled = true;
                 HIDtxt.Enabled = true;
@@ -238,7 +238,7 @@ namespace interceptGUI
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(pogramData + "settings.json"))
+            if (!File.Exists(programData + "settings.json"))
             {
                 string key = ((KeyValuePair<string, string>)CodeCmb.SelectedItem).Key;
 
@@ -246,12 +246,12 @@ namespace interceptGUI
                 settings.code_editor = (key != "") ? key : codeEditor;
 
                 string jsonSettings = JsonConvert.SerializeObject(settings);
-                File.WriteAllText(pogramData + "settings.json", jsonSettings);
+                File.WriteAllText(programData + "settings.json", jsonSettings);
 
                 check = true;
 
                 string files = Config.KeyMap().Replace("{MyKeyboards}", HIDtxt.Text);
-                File.WriteAllText(pogramData + "keyremap.ini", files);
+                File.WriteAllText(programData + "keyremap.ini", files);
             }
 
             Close();

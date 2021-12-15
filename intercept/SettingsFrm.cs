@@ -23,7 +23,7 @@ namespace interceptGUI
 
         string ShortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Application.ProductName) +
                ".lnk";
-        string pogramData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
+        string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
         @"\intercept\";
 
         public SettingsFrm()
@@ -46,7 +46,7 @@ namespace interceptGUI
             saveBtn.Enabled = false;
 
             settings = new ConfigSettings.Settings();
-            string jsonSettings = System.IO.File.ReadAllText(pogramData + "settings.json");
+            string jsonSettings = System.IO.File.ReadAllText(programData + "settings.json");
             settings = JsonConvert.DeserializeObject<ConfigSettings.Settings>(jsonSettings);
 
             Dictionary<string, string> comboSource = new Dictionary<string, string>();
@@ -196,10 +196,10 @@ namespace interceptGUI
             settings.code_editor = (key != "") ? key : codeEditor;
 
             string jsonSettings = JsonConvert.SerializeObject(settings);
-            System.IO.File.WriteAllText(pogramData + "settings.json", jsonSettings);
+            System.IO.File.WriteAllText(programData + "settings.json", jsonSettings);
 
             string files = Config.KeyMap().Replace("{MyKeyboards}", HIDtxt.Text);
-            System.IO.File.WriteAllText(pogramData + "keyremap.ini", files);
+            System.IO.File.WriteAllText(programData + "keyremap.ini", files);
 
             if (!checkStartup.Checked)
                 System.IO.File.Delete(ShortcutPath);
