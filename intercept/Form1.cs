@@ -329,17 +329,8 @@ namespace interceptGUI
         {
             string osNameAndVersion = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
             int build_ver = Int32.Parse(osNameAndVersion.Split('.').Last());
-
-            if (build_ver >= 22000)
-            {
-                MessageBox.Show("Since Windows 11, the default browser system is changed," +
-                    " we will bring the default OS in the future." +
-                    " For now, click OK and paste it in your favorite browser", "Browser Default", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Clipboard.SetText("http://xahlee.info/mswin/autohotkey.html");
-            } else {
+         
                 Process.Start("http://xahlee.info/mswin/autohotkey.html");
-            }
             
         }
 
@@ -362,7 +353,7 @@ namespace interceptGUI
         private void editMacroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ConfigSettings.Settings settings = new ConfigSettings.Settings();
-            string jsonSettings = File.ReadAllText(dataMacro + "settings.json");
+            string jsonSettings = File.ReadAllText(programData + "settings.json");
             settings = JsonConvert.DeserializeObject<ConfigSettings.Settings>(jsonSettings);
 
             Process.Start(settings.code_editor, dataMacro + "keyboard.ahk");
