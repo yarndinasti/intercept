@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,6 +17,8 @@ namespace interceptGUI
         bool active = false;
 
         string dataMacro = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                @"\intercept\";
+        string pogramData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
                 @"\intercept\";
 
         Process AHK, interceptCMD;
@@ -102,8 +105,8 @@ namespace interceptGUI
 
         private void startMacro()
         {
-            iniFile = new StreamReader(dataMacro + "keyremap.ini");
-            jsonFile = new StreamReader(dataMacro + "settings.json");
+            iniFile = new StreamReader(pogramData + "keyremap.ini");
+            jsonFile = new StreamReader(pogramData + "settings.json");
 
             // Create incercept cmd
             interceptCMD = new Process();
@@ -115,7 +118,7 @@ namespace interceptGUI
 
             // Setup executable and parameters
             interceptCMD.StartInfo.FileName = @"intercept_cmd.exe";
-            interceptCMD.StartInfo.Arguments = "/apply /ini " + dataMacro + "keyremap.ini";
+            interceptCMD.StartInfo.Arguments = "/apply /ini " + pogramData + "keyremap.ini";
 
             // Create keyboard.ahk
             AHK = new Process();
@@ -168,6 +171,8 @@ namespace interceptGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //MessageBox.Show(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+            //MessageBox.Show(CultureInfo.InstalledUICulture.ThreeLetterWindowsLanguageName);
             int intOpen = 0;
             Process[] GetPArry = Process.GetProcesses();
             foreach (Process testProcess in GetPArry)
@@ -211,8 +216,20 @@ namespace interceptGUI
             if (!Directory.Exists(dataMacro))
                 Directory.CreateDirectory(dataMacro);
 
+            if (!Directory.Exists(pogramData))
+                Directory.CreateDirectory(pogramData);
+
+            if (File.Exists(dataMacro + "settings.json"))
+            {
+                File.Copy(dataMacro + "settings.json", pogramData + "settings.json");
+                File.Copy(dataMacro + "keyremap.ini", pogramData + "keyremap.ini");
+
+                File.Delete(dataMacro + "settings.json");
+                File.Delete(dataMacro + "keyremap.ini");
+            }
+
             bool hasInt = CheckInterception();
-            bool hasConfig = File.Exists(dataMacro + "settings.json");
+            bool hasConfig = File.Exists(pogramData + "settings.json");
 
             if (!hasInt || !hasConfig)
                 new Wizard().ShowDialog();
