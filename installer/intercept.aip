@@ -10,10 +10,10 @@
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="AnyCPU_Release:welcome.jpg" Type="1" MsiKey="DialogBitmap"/>
     <ROW Property="Manufacturer" Value="Yarn Futami"/>
-    <ROW Property="ProductCode" Value="1033:{50A70F4B-D279-4BE2-9038-22B658E97A5C} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{47B722A2-C3A0-45FF-8C12-919619EA66D6} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="intercept"/>
-    <ROW Property="ProductVersion" Value="0.3.1.0" Type="32" TargetFile="interceptGUI.exe"/>
+    <ROW Property="ProductVersion" Value="0.3.2.0" Type="32" TargetFile="interceptGUI.exe"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8E9C724C-0EFB-46AB-AB3A-423BD5571A3D}"/>
