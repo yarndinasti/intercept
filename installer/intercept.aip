@@ -193,6 +193,7 @@
     <ROW Feature_="MainFeature" Component_="AutoHotkeyU64.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="SystemFoldermsiexec.exe" SourcePath="&lt;AI_RES&gt;uninstall.ico" Index="0"/>
     <ROW Name="incercept.exe" SourcePath="..\intercept\incercept.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
@@ -220,6 +221,7 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="UninstallProductNameProductVersion" Directory_="Intercept_Dir" Name="UNINST~1.0|Uninstall [|ProductName] [|ProductVersion]" Component_="Interop.IWshRuntimeLibrary.dll" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Hotkey="0" Icon_="SystemFoldermsiexec.exe" IconIndex="0" ShowCmd="1"/>
     <ROW Shortcut="intercept" Directory_="Intercept_Dir" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="intercept_1" Directory_="SHORTCUTDIR" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="intercept_2" Directory_="DesktopFolder" Name="INTERC~1|intercept" Component_="interceptGUI.exe" Target="[#interceptGUI.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>

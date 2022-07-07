@@ -28,18 +28,6 @@ namespace interceptGUI
     public Form1()
     {
       InitializeComponent();
-
-      _watcher = new FileSystemWatcher();
-      _watcher.SynchronizingObject = this;
-      _watcher.Path = dataMacro;
-      _watcher.EnableRaisingEvents = true;
-      _watcher.NotifyFilter = NotifyFilters.LastWrite;
-
-      _watcher.Filter = "keyboard.ahk";
-
-      _watcher.Changed += new FileSystemEventHandler(FileChanged);
-      _watcher.Deleted += new FileSystemEventHandler(FileDeleted);
-      _watcher.Renamed += new RenamedEventHandler(FileRenamed);
     }
 
     private void FileRenamed(object sender, RenamedEventArgs e)
@@ -275,6 +263,8 @@ namespace interceptGUI
       if (!File.Exists(dataMacro + "keyboard.ahk"))
         File.WriteAllText(dataMacro + "keyboard.ahk", Config.AHK());
 
+      fileChecker();
+
       foreach (string arg in args)
       {
         if (arg == "/tray")
@@ -293,6 +283,21 @@ namespace interceptGUI
           startMacro();
         }
       }
+    }
+
+    private void fileChecker()
+    {
+      _watcher = new FileSystemWatcher();
+      _watcher.SynchronizingObject = this;
+      _watcher.Path = dataMacro;
+      _watcher.EnableRaisingEvents = true;
+      _watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+      _watcher.Filter = "keyboard.ahk";
+
+      _watcher.Changed += new FileSystemEventHandler(FileChanged);
+      _watcher.Deleted += new FileSystemEventHandler(FileDeleted);
+      _watcher.Renamed += new RenamedEventHandler(FileRenamed);
     }
 
     private bool CheckInterception()
